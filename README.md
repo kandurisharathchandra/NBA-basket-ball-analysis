@@ -35,7 +35,7 @@ Training notebooks are included to help you customize and fine-tune models to su
 
 Below is the final annotated output video.
 
-[Watch Demo Video](https://youtu.be/OhIxm8Pb_tY)
+[![Video Title](https://img.youtube.com/vi/OhIxm8Pb_tY/0.jpg)](https://youtu.be/OhIxm8Pb_tY)
 ---
 
 ## 🔧 Prerequisites
