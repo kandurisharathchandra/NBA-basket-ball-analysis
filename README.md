@@ -97,8 +97,6 @@ This repository relies on trained models for detecting basketballs, players, and
    You can easily run these notebooks in Google Colab or another environment with GPU access. After training, download the newly generated `.pt` files and place them in the `models/` folder.  
 
 Once you have your models in place, you may proceed with the usage steps described above. If you want to retrain or fine-tune for your specific dataset, remember to adjust the paths in the notebooks and in `main.py` to point to the newly generated models.
-
-
 ---
 
 ## 🚀 Usage
