@@ -10,10 +10,25 @@ from utils import read_stub, save_stub
 
 
 class BallTracker:
+    """
+    A class that handles basketball detection and tracking using YOLO.
+
+    This class provides methods to detect the ball in video frames, process detections
+    in batches, and refine tracking results through filtering and interpolation.
+    """
     def __init__(self, model_path):
         self.model = YOLO(model_path) 
 
     def detect_frames(self, frames):
+        """
+        Detect the ball in a sequence of frames using batch processing.
+
+        Args:
+            frames (list): List of video frames to process.
+
+        Returns:
+            list: YOLO detection results for each frame.
+        """
         batch_size=20 
         detections = [] 
         for i in range(0,len(frames),batch_size):
@@ -22,7 +37,17 @@ class BallTracker:
         return detections
 
     def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
-        
+        """
+        Get ball tracking results for a sequence of frames with optional caching.
+
+        Args:
+            frames (list): List of video frames to process.
+            read_from_stub (bool): Whether to attempt reading cached results.
+            stub_path (str): Path to the cache file.
+
+        Returns:
+            list: List of dictionaries containing ball tracking information for each frame.
+        """
         tracks = read_stub(read_from_stub,stub_path)
         if tracks is not None:
             if len(tracks) == len(frames):
@@ -60,6 +85,15 @@ class BallTracker:
         return tracks
 
     def remove_wrong_detections(self,ball_positions):
+        """
+        Filter out incorrect ball detections based on maximum allowed movement distance.
+
+        Args:
+            ball_positions (list): List of detected ball positions across frames.
+
+        Returns:
+            list: Filtered ball positions with incorrect detections removed.
+        """
         maximum_allowed_distance = 50
         # if distance between two consecutive positions is greater than 100, remove that position make it {}
         for i in range(1,len(ball_positions)-1):
@@ -74,6 +108,15 @@ class BallTracker:
         return ball_positions
 
     def interpolate_ball_positions(self,ball_positions):
+        """
+        Interpolate missing ball positions to create smooth tracking results.
+
+        Args:
+            ball_positions (list): List of ball positions with potential gaps.
+
+        Returns:
+            list: List of ball positions with interpolated values filling the gaps.
+        """
         ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
         df_ball_positions = pd.DataFrame(ball_positions,columns=['x1','y1','x2','y2'])
 

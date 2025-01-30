@@ -2,10 +2,26 @@ import cv2
 import numpy as np
 
 class TeamBallControlDrawer:
+    """
+    A class responsible for calculating and drawing team ball control statistics on video frames.
+    """
     def __init__(self):
         pass
 
     def get_team_ball_control(self,player_assignment,ball_aquisition):
+        """
+        Calculate which team has ball control for each frame.
+
+        Args:
+            player_assignment (list): A list of dictionaries indicating team assignments for each player
+                in the corresponding frame.
+            ball_aquisition (list): A list indicating which player has possession of the ball in each frame.
+
+        Returns:
+            numpy.ndarray: An array indicating which team has ball control for each frame
+                (1 for Team 1, 2 for Team 2, -1 for no control).
+        """
+
         team_ball_control = []
         for player_assignment_frame,ball_aquisition_frame in zip(player_assignment,ball_aquisition):
             if ball_aquisition_frame == -1:
@@ -20,6 +36,19 @@ class TeamBallControlDrawer:
         return team_ball_control
 
     def draw(self,video_frames,player_assignment,ball_aquisition):
+        """
+        Draw team ball control statistics on a list of video frames.
+
+        Args:
+            video_frames (list): A list of frames (as NumPy arrays or image objects) on which to draw.
+            player_assignment (list): A list of dictionaries indicating team assignments for each player
+                in the corresponding frame.
+            ball_aquisition (list): A list indicating which player has possession of the ball in each frame.
+
+        Returns:
+            list: A list of frames with team ball control statistics drawn on them.
+        """
+        
         team_ball_control = self.get_team_ball_control(player_assignment,ball_aquisition)
 
         output_video_frames= []
@@ -32,6 +61,18 @@ class TeamBallControlDrawer:
         return output_video_frames
     
     def draw_frame(self,frame,frame_num,team_ball_control):
+        """
+        Draw a semi-transparent overlay of team ball control percentages on a single frame.
+
+        Args:
+            frame (numpy.ndarray): The current video frame on which the overlay will be drawn.
+            frame_num (int): The index of the current frame.
+            team_ball_control (numpy.ndarray): An array indicating which team has ball control for each frame.
+
+        Returns:
+            numpy.ndarray: The frame with the semi-transparent overlay and statistics.
+        """
+        
         # Draw a semi-transparent rectaggle 
         overlay = frame.copy()
 
