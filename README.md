@@ -7,8 +7,8 @@ Leveraging the convenience of Roboflow for dataset management and Ultralytics' Y
 Training notebooks are included to help you customize and fine-tune models to suit your specific needs, ensuring a seamless and efficient workflow.
 
 ## 📁 Table of Contents  
-1.  [Features](#features)  
-2.  [Prerequisites](#prerequisites)  
+1.  [Features](#-features)  
+2.  [Prerequisites](#-prerequisites)  
 3.  [Demo Video](#demo-video)  
 4.  [Installation](#installation)  
 5.  [Training the Models](#training-the-models)
@@ -41,7 +41,7 @@ Below is the final annotated output video.
 ## 🔧 Prerequisites
 
 - Python 3.8+  
-- (Optional) Docker and Docker Compose  
+- (Optional) Docker 
 
 ---
 
