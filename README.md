@@ -9,14 +9,14 @@ Training notebooks are included to help you customize and fine-tune models to su
 ## 📁 Table of Contents  
 1.  [Features](#-features)  
 2.  [Prerequisites](#-prerequisites)  
-3.  [Demo Video](#demo-video)  
-4.  [Installation](#installation)  
-5.  [Training the Models](#training-the-models)
-6.  [Usage](#usage)  
-7.  [Project Structure](#project-structure)  
-8.  [Future Work](#future-work)
-9.  [Contributing](#contributing)  
-10. [License](#license)  
+3.  [Demo Video](#-demo-video)  
+4.  [Installation](#-installation)  
+5.  [Training the Models](#-training-the-models)
+6.  [Usage](#-usage)  
+7.  [Project Structure](#-project-structure)  
+8.  [Future Work](#-future-work)
+9.  [Contributing](#-contributing)  
+10. [License](#-license)  
 
 ---
 
