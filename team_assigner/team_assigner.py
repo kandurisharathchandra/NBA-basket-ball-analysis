@@ -1,8 +1,6 @@
-import numpy as np
-import torch
 from PIL import Image
 import cv2
-from transformers import AutoModel, AutoProcessor
+from transformers import CLIPProcessor, CLIPModel
 
 import sys 
 sys.path.append('../')
@@ -22,8 +20,9 @@ class TeamAssigner:
         team_2_class_name (str): Description of Team 2's jersey appearance.
     """
     def __init__(self,
-                 team_1_class_name="white T-shirt",
-                 team_2_class_name="blue T-shirt"):
+                 team_1_class_name= "white shirt",
+                 team_2_class_name= "dark blue shirt",
+                 ):
         """
         Initialize the TeamAssigner with specified team jersey descriptions.
 
@@ -41,8 +40,8 @@ class TeamAssigner:
         """
         Loads the pre-trained vision model for jersey color classification.
         """
-        self.model = AutoModel.from_pretrained('Marqo/marqo-fashionSigLIP', trust_remote_code=True)
-        self.processor = AutoProcessor.from_pretrained('Marqo/marqo-fashionSigLIP', trust_remote_code=True)
+        self.model = CLIPModel.from_pretrained("patrickjohncyh/fashion-clip")
+        self.processor = CLIPProcessor.from_pretrained("patrickjohncyh/fashion-clip")
 
     def get_player_color(self,frame,bbox):
         """
@@ -56,28 +55,24 @@ class TeamAssigner:
             str: The classified jersey color/description.
         """
         image = frame[int(bbox[1]):int(bbox[3]),int(bbox[0]):int(bbox[2])]
-        top_half_image = image[0:int(image.shape[0]/2),:]
 
         # Convert to PIL Image
-        rgb_image = cv2.cvtColor(top_half_image, cv2.COLOR_BGR2RGB)
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(rgb_image)
-        image = [pil_image]
+        image = pil_image
 
-        
-        text = [self.team_1_class_name, self.team_2_class_name]
-        processed = self.processor(text=text, images=image, padding='max_length', return_tensors="pt")
+        classes = [self.team_1_class_name, self.team_2_class_name]
 
-        with torch.no_grad():
-            image_features = self.model.get_image_features(processed['pixel_values'], normalize=True)
-            text_features = self.model.get_text_features(processed['input_ids'], normalize=True)
+        inputs = self.processor(text=classes, images=image, return_tensors="pt", padding=True)
 
-            text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        probs = logits_per_image.softmax(dim=1) 
 
-        #argmax
-        argmax_index = np.argmax(text_probs)
-        
-        return text[argmax_index]
 
+        class_name=  classes[probs.argmax(dim=1)[0]]
+
+        return class_name
 
     def get_player_team(self,frame,player_bbox,player_id):
         """
@@ -92,12 +87,12 @@ class TeamAssigner:
             int: Team ID (1 or 2) assigned to the player.
         """
         if player_id in self.player_team_dict:
-           return self.player_team_dict[player_id]
+          return self.player_team_dict[player_id]
 
         player_color = self.get_player_color(frame,player_bbox)
 
         team_id=2
-        if player_color=="white T-shirt":
+        if player_color==self.team_1_class_name:
             team_id=1
 
         self.player_team_dict[player_id] = team_id
@@ -125,7 +120,7 @@ class TeamAssigner:
         self.load_model()
 
         player_assignment=[]
-        for frame_num, player_track in enumerate(player_tracks):
+        for frame_num, player_track in enumerate(player_tracks):        
             player_assignment.append({})
             for player_id, track in player_track.items():
                 team = self.get_player_team(video_frames[frame_num],   

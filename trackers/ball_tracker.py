@@ -32,7 +32,7 @@ class BallTracker:
         batch_size=20 
         detections = [] 
         for i in range(0,len(frames),batch_size):
-            detections_batch = self.model.predict(frames[i:i+batch_size],conf=0.6)
+            detections_batch = self.model.predict(frames[i:i+batch_size],conf=0.5)
             detections += detections_batch
         return detections
 
@@ -67,6 +67,7 @@ class BallTracker:
             tracks.append({})
             chosen_bbox =None
             max_confidence = 0
+            
             for frame_detection in detection_supervision:
                 bbox = frame_detection[0].tolist()
                 cls_id = frame_detection[3]
@@ -76,7 +77,7 @@ class BallTracker:
                     if max_confidence<confidence:
                         chosen_bbox = bbox
                         max_confidence = confidence
-            
+
             if chosen_bbox is not None:
                 tracks[frame_num][1] = {"bbox":chosen_bbox}
 
@@ -94,17 +95,30 @@ class BallTracker:
         Returns:
             list: Filtered ball positions with incorrect detections removed.
         """
-        maximum_allowed_distance = 50
-        # if distance between two consecutive positions is greater than 100, remove that position make it {}
-        for i in range(1,len(ball_positions)-1):
-            currnet_box = ball_positions[i].get(1,{}).get('bbox',[])
-            next_box = ball_positions[i+1].get(1,{}).get('bbox',[])
-            
-            if len(currnet_box) == 0 or len(next_box) == 0:
+        
+        maximum_allowed_distance = 25
+        last_good_frame_index = -1
+
+        for i in range(len(ball_positions)):
+            current_box = ball_positions[i].get(1, {}).get('bbox', [])
+
+            if len(current_box) == 0:
                 continue
-            
-            if np.linalg.norm(np.array(currnet_box[:2]) - np.array(next_box[:2])) > maximum_allowed_distance:
-                ball_positions[i] = {}     
+
+            if last_good_frame_index == -1:
+                # First valid detection
+                last_good_frame_index = i
+                continue
+
+            last_good_box = ball_positions[last_good_frame_index].get(1, {}).get('bbox', [])
+            frame_gap = i - last_good_frame_index
+            adjusted_max_distance = maximum_allowed_distance * frame_gap
+
+            if np.linalg.norm(np.array(last_good_box[:2]) - np.array(current_box[:2])) > adjusted_max_distance:
+                ball_positions[i] = {}
+            else:
+                last_good_frame_index = i
+
         return ball_positions
 
     def interpolate_ball_positions(self,ball_positions):

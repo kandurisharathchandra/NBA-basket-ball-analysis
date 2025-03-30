@@ -33,6 +33,8 @@ class BallTracksDrawer:
 
             # Draw ball 
             for _, ball in ball_dict.items():
+                if ball["bbox"] is None:
+                    continue
                 frame = draw_traingle(frame, ball["bbox"],self.ball_pointer_color)
 
             output_video_frames.append(frame)

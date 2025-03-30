@@ -25,7 +25,7 @@ class BallAquisitionDetector:
                 is considered to hold the ball without requiring distance checking.
         """
         self.possession_threshold = 50
-        self.min_frames = 2
+        self.min_frames = 5
         self.containment_threshold = 0.8
         
     def get_key_basketball_points(self, bbox):
