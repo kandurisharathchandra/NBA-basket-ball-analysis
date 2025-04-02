@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 class PassAndInterceptionDetector():
     """
     A class that detects passes between teammates and interceptions by opposing teams.
@@ -53,13 +55,18 @@ class PassAndInterceptionDetector():
                 (-1: no interception, 1: Team 1 interception, 2: Team 2 interception).
         """
         interceptions = [-1] * len(ball_acquisition)
+        prev_holder=-1
+        previous_frame=-1
         
         for frame in range(1, len(ball_acquisition)):
-            prev_holder = ball_acquisition[frame - 1]
+            if ball_acquisition[frame - 1] != -1:
+                prev_holder = ball_acquisition[frame - 1]
+                previous_frame= frame - 1
+
             current_holder = ball_acquisition[frame]
             
             if prev_holder != -1 and current_holder != -1 and prev_holder != current_holder:
-                prev_team = player_assignment[frame - 1].get(prev_holder, -1)
+                prev_team = player_assignment[previous_frame].get(prev_holder, -1)
                 current_team = player_assignment[frame].get(current_holder, -1)
                 
                 if prev_team != current_team and prev_team != -1 and current_team != -1:
