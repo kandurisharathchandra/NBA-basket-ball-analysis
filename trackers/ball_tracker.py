@@ -1,7 +1,5 @@
 from ultralytics import YOLO
 import supervision as sv
-import pickle
-import os
 import numpy as np
 import pandas as pd
 import sys 

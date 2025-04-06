@@ -8,6 +8,7 @@ from .homography import Homography
 
 folder_path = pathlib.Path(__file__).parent.resolve()
 sys.path.append(os.path.join(folder_path,"../"))
+from utils import get_foot_position,measure_distance
 
 class TacticalViewConverter:
     def __init__(self, court_image_path):
@@ -91,12 +92,12 @@ class TacticalViewConverter:
                 j, k = other_indices[0], other_indices[1]
 
                 # Calculate distances between detected keypoints
-                d_ij = self._calculate_distance(frame_keypoints[i], frame_keypoints[j])
-                d_ik = self._calculate_distance(frame_keypoints[i], frame_keypoints[k])
+                d_ij = measure_distance(frame_keypoints[i], frame_keypoints[j])
+                d_ik = measure_distance(frame_keypoints[i], frame_keypoints[k])
                 
                 # Calculate distances between corresponding tactical keypoints
-                t_ij = self._calculate_distance(self.key_points[i], self.key_points[j])
-                t_ik = self._calculate_distance(self.key_points[i], self.key_points[k])
+                t_ij = measure_distance(self.key_points[i], self.key_points[j])
+                t_ik = measure_distance(self.key_points[i], self.key_points[k])
 
                 # Calculate and compare proportions with 50% error margin
                 if t_ij > 0 and t_ik > 0:
@@ -112,23 +113,6 @@ class TacticalViewConverter:
                         invalid_keypoints.append(i)
             
         return keypoints_list
-
-    def _calculate_distance(self, point1, point2):
-        """
-        Calculate Euclidean distance between two points.
-        
-        Args:
-            point1 (Tuple[float, float]): First point (x, y)
-            point2 (Tuple[float, float]): Second point (x, y)
-            
-        Returns:
-            float: Euclidean distance between the points
-        """
-        return ((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)**0.5
-
-    def get_width(self):
-        return self.width  
-    
 
     def transform_players_to_tactical_view(self, keypoints_list, player_tracks):
         """
@@ -179,8 +163,7 @@ class TacticalViewConverter:
                 for player_id, player_data in frame_tracks.items():
                     bbox = player_data["bbox"]
                     # Use bottom center of bounding box as player position
-                    player_position = np.array([[bbox[0] + (bbox[2] - bbox[0]) / 2, bbox[3]]])
-                    
+                    player_position = np.array([get_foot_position(bbox)])
                     # Transform to tactical view coordinates
                     tactical_position = homography.transform_points(player_position)
 

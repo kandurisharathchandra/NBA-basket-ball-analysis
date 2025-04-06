@@ -119,7 +119,7 @@ class BallAquisitionDetector:
         key_points = self.get_key_basketball_player_assignment_points(player_bbox,ball_center)
         return min(measure_distance(ball_center, point) for point in key_points)
     
-    def find_best_candidate_for_possession(self, ball_center, player_tracks_frame, ball_bbox, frame_num):
+    def find_best_candidate_for_possession(self, ball_center, player_tracks_frame, ball_bbox):
         """
         Determine which player in a single frame is most likely to have the ball.
 
@@ -134,7 +134,7 @@ class BallAquisitionDetector:
             ball_bbox (tuple): Bounding box for the ball (x1, y1, x2, y2).
 
         Returns:
-            tuple: (best_player_id, min_distance), or (-1, float('inf')) if none found.
+            int: (best_player_id), or (-1 ) if none found.
         """
         high_containment_players = []
         regular_distance_players = []
@@ -154,15 +154,16 @@ class BallAquisitionDetector:
 
         # First priority: players with high containment
         if high_containment_players:
-            return max(high_containment_players, key=lambda x: x[1])
+            best_candidate = max(high_containment_players, key=lambda x: x[1])
+            return best_candidate[0]
             
         # Second priority: players within distance threshold
         if regular_distance_players:
             best_candidate = min(regular_distance_players, key=lambda x: x[1])
             if best_candidate[1] < self.possession_threshold:
-                return best_candidate
+                return best_candidate[0]
                 
-        return -1, float('inf')
+        return -1
     
     def detect_ball_possession(self, player_tracks, ball_tracks):
         """
@@ -198,14 +199,13 @@ class BallAquisitionDetector:
                 
             ball_center = get_center_of_bbox(ball_bbox)
             
-            best_player_id, min_distance = self.find_best_candidate_for_possession(
+            best_player_id = self.find_best_candidate_for_possession(
                 ball_center, 
                 player_tracks[frame_num], 
-                ball_bbox,
-                frame_num
+                ball_bbox
             )
 
-            if best_player_id != -1:# and min_distance < self.possession_threshold:
+            if best_player_id != -1:
                 number_of_consecutive_frames = consecutive_possession_count.get(best_player_id, 0) + 1
                 consecutive_possession_count = {best_player_id: number_of_consecutive_frames} 
 

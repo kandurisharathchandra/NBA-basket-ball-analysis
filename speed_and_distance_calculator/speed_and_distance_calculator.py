@@ -1,4 +1,10 @@
-from copy import deepcopy
+import os
+import sys
+import pathlib
+folder_path = pathlib.Path(__file__).parent.resolve()
+sys.path.append(os.path.join(folder_path,"../"))
+from utils import measure_distance
+
 
 class SpeedAndDistanceCalculator():
     def __init__(self, 
@@ -45,7 +51,9 @@ class SpeedAndDistanceCalculator():
          current_meter_x = current_pixel_x * self.width_in_meters / self.width_in_pixels
          current_meter_y = current_pixel_y * self.height_in_meters / self.height_in_pixels
 
-         meter_distance = ((current_meter_x - previous_meter_x) ** 2 + (current_meter_y - previous_meter_y) ** 2) ** 0.5
+         meter_distance =measure_distance((current_meter_x,current_meter_y),
+                                          (previous_meter_x,previous_meter_y)
+                                          )
 
          meter_distance = meter_distance*0.4
          return meter_distance
