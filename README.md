@@ -36,7 +36,7 @@ Training notebooks are included to help you customize and fine-tune models to su
 
 Below is the final annotated output video.
 
-[![BasketBall Analysis Demo Video](https://img.youtube.com/vi/95_PE0729Uc/3.jpg)](https://youtu.be/95_PE0729Uc)
+[![BasketBall Analysis Demo Video](https://img.youtube.com/vi/95_PE0729Uc/0.jpg)](https://youtu.be/95_PE0729Uc)
 
 ## 🔧 Prerequisites
 
