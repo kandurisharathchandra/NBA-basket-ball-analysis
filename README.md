@@ -1,33 +1,34 @@
 # 🏀 Basketball Video Analysis
 
-Analyze basketball footage with automated detection of players, ball, team assignment, and more.  This repository integrates object tracking, zero-shot classification, and custom keypoint detection for a fully annotated basketball game experience.
+Analyze basketball footage with automated detection of players, ball, team assignment, and more. This repository integrates object tracking, zero-shot classification, and custom keypoint detection for a fully annotated basketball game experience.
 
-Leveraging the convenience of Roboflow for dataset management and Ultralytics' YOLO models for both training and inference, this project provides a robust framework for basketball video analysis. 
+Leveraging the convenience of Roboflow for dataset management and Ultralytics' YOLO models for both training and inference, this project provides a robust framework for basketball video analysis.
 
 Training notebooks are included to help you customize and fine-tune models to suit your specific needs, ensuring a seamless and efficient workflow.
 
-## 📁 Table of Contents  
-1.  [Features](#-features)  
-2.  [Prerequisites](#-prerequisites)  
-3.  [Demo Video](#-demo-video)  
-4.  [Installation](#-installation)  
+## 📁 Table of Contents
+
+1.  [Features](#-features)
+2.  [Prerequisites](#-prerequisites)
+3.  [Demo Video](#-demo-video)
+4.  [Installation](#-installation)
 5.  [Training the Models](#-training-the-models)
-6.  [Usage](#-usage)  
-7.  [Project Structure](#-project-structure)  
+6.  [Usage](#-usage)
+7.  [Project Structure](#-project-structure)
 8.  [Future Work](#-future-work)
-9.  [Contributing](#-contributing)  
-10. [License](#-license)  
+9.  [Contributing](#-contributing)
+10. [License](#-license)
 
 ---
 
 ## ✨ Features
 
-- Player and ball detection/tracking using pretrained models.  
-- Court keypoint detection for visualizing important zones.  
-- Team assignment with jersey color classification.  
-- Ball possession detection, pass detection, and interception detection.  
-- Easy stubbing to skip repeated computation for fast iteration.  
-- Various “drawers” to overlay detected elements onto frames.  
+- Player and ball detection/tracking using pretrained models.
+- Court keypoint detection for visualizing important zones.
+- Team assignment with jersey color classification.
+- Ball possession detection, pass detection, and interception detection.
+- Easy stubbing to skip repeated computation for fast iteration.
+- Various “drawers” to overlay detected elements onto frames.
 
 ---
 
@@ -35,13 +36,12 @@ Training notebooks are included to help you customize and fine-tune models to su
 
 Below is the final annotated output video.
 
-[![Video Title](https://img.youtube.com/vi/OhIxm8Pb_tY/0.jpg)](https://youtu.be/OhIxm8Pb_tY)
----
+[![BasketBall Analysis Demo Video](https://img.youtube.com/vi/95_PE0729Uc/3.jpg)](https://youtu.be/95_PE0729Uc)
 
 ## 🔧 Prerequisites
 
-- Python 3.8+  
-- (Optional) Docker 
+- Python 3.8+
+- (Optional) Docker
 
 ---
 
@@ -51,7 +51,7 @@ Setup your environment locally or via Docker.
 
 ### Python Environment
 
-1. Create a virtual environment (e.g., venv/conda).  
+1. Create a virtual environment (e.g., venv/conda).
 2. Install the required packages:
 
 ```bash
@@ -61,11 +61,13 @@ pip install -r requirements.txt
 ### Docker
 
 #### Build the Docker image:
+
 ```bash
 docker build -t basketball-analysis .
 ```
 
 #### Verify the image:
+
 ```bash
 docker images
 ```
@@ -74,52 +76,55 @@ docker images
 
 Harnessing the powerful tools offered by Roboflow and Ultralytics makes it straightforward to manage datasets, handle annotations, and train advanced object detection models. Roboflow provides an intuitive platform for dataset preprocessing and augmentation, while Ultralytics’ YOLO architectures (v5, v8, and beyond) deliver state-of-the-art detection performance.
 
-
 This repository relies on trained models for detecting basketballs, players, and court keypoints. You have two options to get these models:
 
-1. Download the Pretrained Weights  
+1. Download the Pretrained Weights
+
    - ball_detector_model.pt  
-     (https://drive.google.com/file/d/1rHqQ-TWMJqgXo3zS7brAiCEvkas9ffoO/view?usp=sharing)  
+     (https://drive.google.com/file/d/1rHqQ-TWMJqgXo3zS7brAiCEvkas9ffoO/view?usp=sharing)
    - court_keypoint_detector.pt  
-     (https://drive.google.com/file/d/1mqojpT8P2MuDzdvrYdOU_KTzr23Zkn94/view?usp=sharing)  
+     (https://drive.google.com/file/d/1mqojpT8P2MuDzdvrYdOU_KTzr23Zkn94/view?usp=sharing)
    - player_detector.pt  
-     (https://drive.google.com/file/d/1fhq8uYhXNR3NSSyhDKja3XGr70Ll45Gn/view?usp=sharing)  
+     (https://drive.google.com/file/d/1fhq8uYhXNR3NSSyhDKja3XGr70Ll45Gn/view?usp=sharing)
 
    Simply download these files and place them into the `models/` folder in your project. This allows you to run the pipelines without manually retraining.
 
 2. Train Your Own Models  
    The training scripts are provided in the `training_notebooks/` folder. These Jupyter notebooks use Roboflow datasets and the Ultralytics YOLO frameworks to train various detection tasks:
 
-   - `basketball_ball_training.ipynb`: Trains a basketball ball detector (using YOLOv5). Incorporates motion blur augmentations to improve ball detection accuracy on fast-moving game footage.  
-   - `basketball_court_keypoint_training.ipynb`: Uses YOLOv8 to detect keypoints on the court (e.g., lines, corners, key zones).  
-   - `basketball_player_detection_training.ipynb`: Trains a player detection model (using YOLO v11) to identify players in each frame.  
+   - `basketball_ball_training.ipynb`: Trains a basketball ball detector (using YOLOv5). Incorporates motion blur augmentations to improve ball detection accuracy on fast-moving game footage.
+   - `basketball_court_keypoint_training.ipynb`: Uses YOLOv8 to detect keypoints on the court (e.g., lines, corners, key zones).
+   - `basketball_player_detection_training.ipynb`: Trains a player detection model (using YOLO v11) to identify players in each frame.
 
-   You can easily run these notebooks in Google Colab or another environment with GPU access. After training, download the newly generated `.pt` files and place them in the `models/` folder.  
+   You can easily run these notebooks in Google Colab or another environment with GPU access. After training, download the newly generated `.pt` files and place them in the `models/` folder.
 
-Once you have your models in place, you may proceed with the usage steps described above. If you want to retrain or fine-tune for your specific dataset, remember to adjust the paths in the notebooks and in `main.py` to point to the newly generated models.
----
+## Once you have your models in place, you may proceed with the usage steps described above. If you want to retrain or fine-tune for your specific dataset, remember to adjust the paths in the notebooks and in `main.py` to point to the newly generated models.
 
 ## 🚀 Usage
 
 You can run this repository’s core functionality (analysis pipeline) with Python or Docker.
 
 ### 1) Using Python Directly
+
 Run the main entry point with your chosen video file:
 
 ```bash
 python main.py path_to_input_video.mp4 --output_video output_videos/output_result.avi
 ```
 
-- By default, intermediate “stubs” (pickled detection results) are used if found, allowing you to skip repeated detection/tracking.  
+- By default, intermediate “stubs” (pickled detection results) are used if found, allowing you to skip repeated detection/tracking.
 - Use the `--stub_path` flag to specify a custom stub folder, or disable stubs if you want to run everything fresh.
 
 ### 2) Using Docker
+
 #### Build the container if not built already:
+
 ```bash
 docker build -t basketball-analysis .
 ```
 
 #### Run the container, mounting your local input video folder:
+
 ```bash
 docker run \
   -v $(pwd)/videos:/app/videos \
@@ -176,14 +181,13 @@ As we continue to enhance the capabilities of this basketball video analysis too
 
 These enhancements will further refine the analysis capabilities and provide users with more comprehensive insights into basketball games.
 
-
 ## 🤝 Contributing
 
 Contributions are welcome!
 
-1. Fork the repository.  
-2. Create a new branch for your feature or bug fix.  
-3. Submit a pull request with a clear explanation of your changes.  
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Submit a pull request with a clear explanation of your changes.
 
 ---
 
