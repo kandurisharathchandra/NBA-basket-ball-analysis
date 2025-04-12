@@ -81,11 +81,11 @@ This repository relies on trained models for detecting basketballs, players, and
 1. Download the Pretrained Weights
 
    - ball_detector_model.pt  
-     (https://drive.google.com/file/d/1rHqQ-TWMJqgXo3zS7brAiCEvkas9ffoO/view?usp=sharing)
+     (https://drive.google.com/file/d/1KejdrcEnto2AKjdgdo1U1syr5gODp6EL/view?usp=sharing)
    - court_keypoint_detector.pt  
-     (https://drive.google.com/file/d/1mqojpT8P2MuDzdvrYdOU_KTzr23Zkn94/view?usp=sharing)
+     (https://drive.google.com/file/d/1nGoG-pUkSg4bWAUIeQ8aN6n7O1fOkXU0/view?usp=sharing)
    - player_detector.pt  
-     (https://drive.google.com/file/d/1fhq8uYhXNR3NSSyhDKja3XGr70Ll45Gn/view?usp=sharing)
+     (https://drive.google.com/file/d/1fVBLZtPy9Yu6Tf186oS4siotkioHBLHy/view?usp=sharing)
 
    Simply download these files and place them into the `models/` folder in your project. This allows you to run the pipelines without manually retraining.
 
@@ -170,13 +170,7 @@ docker run \
 
 As we continue to enhance the capabilities of this basketball video analysis tool, several areas for future development have been identified:
 
-1. **Fine-Tuning the Ball Detection Model**  
-   Improving the accuracy of the ball detection model is a priority. Fine-tuning the existing model with additional data and experimenting with different augmentation techniques could lead to more precise tracking, especially in challenging scenarios with fast-moving balls.
-
-2. **Adding a Tactical View**  
-   By utilizing the extracted court keypoints, we aim to develop a tactical view feature. This would provide a strategic overlay on the video, highlighting important zones and player movements, thereby offering deeper insights into game tactics and player positioning.
-
-3. **Integrating a Pose Model for Advanced Rule Detection**  
+1. **Integrating a Pose Model for Advanced Rule Detection**  
    Incorporating a pose detection model could enable the identification of complex basketball rules such as double dribbling and traveling. By analyzing player movements and positions, the system could automatically flag these infractions, adding another layer of analysis to the video footage.
 
 These enhancements will further refine the analysis capabilities and provide users with more comprehensive insights into basketball games.
