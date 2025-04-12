@@ -141,7 +141,7 @@ def main():
     
     # Speed and Distance Drawer
     output_video_frames = speed_and_distance_drawer.draw(output_video_frames,
-                                                         ball_aquisition,
+                                                         player_tracks,
                                                          player_distances_per_frame,
                                                          player_speed_per_frame
                                                          )
